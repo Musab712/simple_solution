@@ -1,4 +1,4 @@
-# Apex Automate - Agency Website
+# Simple Solution - Agency Website
 
 A modern, responsive agency website built with React and TypeScript, featuring a contact form integrated with n8n workflows for automated lead management.
 
@@ -49,7 +49,7 @@ A modern, responsive agency website built with React and TypeScript, featuring a
 ## 📁 Project Structure
 
 ```
-apex-automate-main/
+simple-solution-main/
 ├── backend/                 # Backend API server
 │   ├── src/
 │   │   ├── controllers/    # Request handlers
@@ -377,4 +377,4 @@ For issues and questions, please open an issue on [GitHub](https://github.com/Mu
 
 ---
 
-Made with ❤️ by Apex Automate
+Made with ❤️ by Simple Solution
