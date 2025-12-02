@@ -10,9 +10,13 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:8080';
 
-// Health check endpoint - placed before CORS to ensure it's always accessible
-// Handle both GET and OPTIONS (preflight) requests
+// Health check endpoint - MUST be registered before any middleware
+// This ensures it's accessible without CORS restrictions
 app.get('/api/health', (_req, res) => {
+  // Set permissive CORS headers manually for health checks
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
   res.json({
     status: 'ok',
     timestamp: new Date().toISOString(),
@@ -20,7 +24,7 @@ app.get('/api/health', (_req, res) => {
   });
 });
 
-// Handle OPTIONS preflight for health endpoint
+// Handle OPTIONS preflight for health endpoint - also before any middleware
 app.options('/api/health', (_req, res) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -32,6 +36,7 @@ app.options('/api/health', (_req, res) => {
 const allowedOrigins = FRONTEND_URL.split(',').map(url => url.trim());
 
 // CORS configuration with support for multiple origins
+// The origin callback needs to allow health checks from any origin
 const corsOptions = {
   origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
     // Always allow requests with no origin (like mobile apps, Postman, health checks, monitoring tools, etc.)
@@ -57,12 +62,24 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
-// Apply CORS middleware, but skip it for health endpoint to avoid any issues
+// Custom CORS middleware that skips health endpoint
 app.use((req, res, next) => {
   // Completely bypass CORS for health endpoint
   if (req.path === '/api/health') {
+    // Set permissive headers for health checks
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    
+    // If it's an OPTIONS request, respond immediately
+    if (req.method === 'OPTIONS') {
+      return res.sendStatus(204);
+    }
+    
     return next();
   }
+  
+  // Apply CORS for all other routes
   return cors(corsOptions)(req, res, next);
 });
 
