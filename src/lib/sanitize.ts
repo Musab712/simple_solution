@@ -25,12 +25,15 @@ const normalizeWhitespace = (input: string, preserveLineBreaks = false): string 
 
 /**
  * Sanitizes name input
- * - Trims whitespace
  * - Removes HTML tags
- * - Normalizes whitespace
+ * - Normalizes multiple spaces to single space
+ * - Preserves single spaces (doesn't trim during typing)
  */
 export const sanitizeName = (input: string): string => {
-  return normalizeWhitespace(stripHtmlTags(input.trim()));
+  // Only strip HTML tags and normalize multiple spaces, but preserve single spaces
+  const stripped = stripHtmlTags(input);
+  // Replace multiple consecutive spaces with single space, but keep single spaces
+  return stripped.replace(/[ \t]{2,}/g, ' ');
 };
 
 /**
@@ -45,25 +48,25 @@ export const sanitizeEmail = (input: string): string => {
 
 /**
  * Sanitizes phone input
- * - Trims whitespace
  * - Removes HTML tags
  * - Keeps only digits, +, spaces, dashes, parentheses
+ * - Preserves spaces (doesn't trim during typing)
  */
 export const sanitizePhone = (input: string): string => {
-  const cleaned = stripHtmlTags(input.trim());
+  const cleaned = stripHtmlTags(input);
   // Keep only valid phone characters: digits, +, spaces, dashes, parentheses
   return cleaned.replace(/[^\d\+\s\-\(\)]/g, '');
 };
 
 /**
  * Sanitizes message input
- * - Trims whitespace
  * - Removes HTML tags (prevents XSS)
- * - Normalizes whitespace but preserves line breaks
+ * - Normalizes whitespace but preserves line breaks and single spaces
  * - Less aggressive to preserve user intent
  */
 export const sanitizeMessage = (input: string): string => {
-  const stripped = stripHtmlTags(input.trim());
-  return normalizeWhitespace(stripped, true);
+  const stripped = stripHtmlTags(input);
+  // Preserve line breaks, normalize multiple spaces/tabs to single space
+  return stripped.replace(/[ \t]{2,}/g, ' ').replace(/\n{3,}/g, '\n\n');
 };
 
