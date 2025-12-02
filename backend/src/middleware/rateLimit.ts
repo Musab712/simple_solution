@@ -10,7 +10,7 @@ import { ContactFormResponse } from '../types/contact.js';
 export const contactFormRateLimit = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 5, // Limit each IP to 5 requests per windowMs
-  handler: (req: Request, res: Response) => {
+  handler: (_req: Request, res: Response) => {
     const response: ContactFormResponse = {
       success: false,
       message: 'Too many form submissions. Please try again in 15 minutes.',

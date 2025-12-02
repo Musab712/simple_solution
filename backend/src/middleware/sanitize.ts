@@ -48,7 +48,7 @@ const sanitizeString = (value: string, preserveLineBreaks = false): string => {
  */
 export const sanitizeInput = (
   req: Request,
-  res: Response,
+  _res: Response,
   next: NextFunction
 ): void => {
   if (req.body && typeof req.body === 'object') {

@@ -15,15 +15,18 @@
  */
 
 import { Request, Response } from 'express';
+// @ts-expect-error - Used in commented-out tests below
 import { contactFormRateLimit } from '../rateLimit.js';
 
 // Mock Express request/response
+// @ts-expect-error - Used in commented-out tests below
 const createMockRequest = (ip: string): Partial<Request> => ({
   ip,
   headers: {},
   socket: { remoteAddress: ip } as any,
 } as Request);
 
+// @ts-expect-error - Used in commented-out tests below
 const createMockResponse = (): Partial<Response> => {
   const res = {} as Response;
   res.status = (() => res) as any;

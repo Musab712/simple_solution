@@ -21,13 +21,16 @@
  */
 
 import { Request, Response, NextFunction } from 'express';
+// @ts-expect-error - Used in commented-out tests below
 import { validateContactForm } from '../validation.js';
 
 // Mock Express request/response/next
+// @ts-expect-error - Used in commented-out tests below
 const createMockRequest = (body: any): Partial<Request> => ({
   body,
 } as Request);
 
+// @ts-expect-error - Used in commented-out tests below
 const createMockResponse = (): Partial<Response> => {
   const res = {} as Response;
   res.status = (() => res) as any;
@@ -35,6 +38,7 @@ const createMockResponse = (): Partial<Response> => {
   return res;
 };
 
+// @ts-expect-error - Used in commented-out tests below
 const createMockNext = (): NextFunction => (() => {}) as NextFunction;
 
 // Test suite - uncomment when Jest is configured
